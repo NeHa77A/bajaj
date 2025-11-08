@@ -25,13 +25,21 @@ Built specifically for the Bajaj AMC Fund Factsheet challenge, supporting comple
 ## 🧩 Key Features
 
 ✅ **Multimodal PDF Processing**: Extracts text, tables, and images from PDFs
+
 ✅ **LangChain Integration**: Document loaders, text splitting, and embeddings
+
 ✅ **LangGraph Workflow**: Stateful RAG pipeline with retrieval → calculation → generation
+
 ✅ **FAISS Vector Store**: Fast, efficient similarity search
+
 ✅ **Groq LLM**: Lightning-fast inference with Llama 3.1 70B
+
 ✅ **Financial Calculations**: CAGR, returns, ratios computed on-the-fly
+
 ✅ **Source Attribution**: Every answer cites relevant document sections
+
 ✅ **Interactive UI**: Modern Streamlit chat interface with sample questions
+
 ✅ **Context-Aware**: Maintains conversation history for follow-up questions
 
 ---
@@ -39,6 +47,11 @@ Built specifically for the Bajaj AMC Fund Factsheet challenge, supporting comple
 ## 🏗️ Architecture
 
 ### LangGraph RAG Workflow
+
+https://whimsical.com/JjEL3zCJVhZFhh274sVLND
+
+
+![Architecture](https://raw.githubusercontent.com/NeHa77A/bajaj/refs/heads/dev/bajaj_hld.png)
 
 ```
 User Query
