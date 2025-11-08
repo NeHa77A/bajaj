@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+streamlit
+pymupdf
+pdfplumber
+torch
+transformers
+sentence-transformers
+chromadb
+Pillow
+tqdm
+python-multipart
+PyYAML

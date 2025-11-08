@@ -1,0 +1,37 @@
+project_name: fund_factsheet_rag
+
+paths:
+  raw_pdfs: data/raw_pdfs
+  extracted_images: data/extracted_images
+  parsed_tables: data/parsed_tables
+  faiss_index: artifacts/faiss
+  memory_index: artifacts/faiss/memory
+
+vector_db:
+  type: faiss
+  index_name: factsheet_index
+  embedding_dimension: 1536  # OpenAI text-embedding-3-small dimension
+
+memory:
+  enabled: true
+  type: faiss
+  collection_name: conversation_memory
+  max_history: 10
+
+models:
+  # Embeddings: OpenAI API (lightweight, no PyTorch, excellent rate limits)
+  embedding_provider: openai
+  text_embedding: text-embedding-3-small
+  # LLM: Using Groq for fast inference
+  llm_provider: groq
+  groq_model: llama-3.3-70b-versatile
+  temperature: 0.3
+  max_tokens: 1024
+
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.5
+
+langchain:
+  chunk_size: 1000
+  chunk_overlap: 200

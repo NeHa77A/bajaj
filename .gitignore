@@ -1,0 +1,43 @@
+# Environment files
+.env
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Tests
+tests/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE or editor files
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# FAISS vector store artifacts (binary files)
+artifacts/
+*.faiss
+*.pkl
+
+# Data directories (user-specific)
+data/raw_pdfs/
+data/extracted_images/
+data/parsed_tables/
+
+# Lock files
+.~lock.*
+*.lock
+
+# Claude/Vincent IDE files
+.claude/
+.vincent/

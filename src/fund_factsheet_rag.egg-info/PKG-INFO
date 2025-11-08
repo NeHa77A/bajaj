@@ -1,0 +1,203 @@
+Metadata-Version: 2.4
+Name: fund_factsheet_rag
+Version: 0.0.1
+Summary: A modular RAG chatbot that extracts and answers queries from fund factsheet PDFs using Hugging Face models and Chroma vector DB.
+Home-page: https://github.com/NeHa77A/Fund-Factsheet-RAG-Chatbot
+Author: NeHa77A
+Author-email: nehavishwakarma7777@gmail.com
+Project-URL: Bug Tracker, https://github.com/NeHa77A/Fund-Factsheet-RAG-Chatbot/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Software Development :: Libraries
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: streamlit
+Requires-Dist: pymupdf
+Requires-Dist: pdfplumber
+Requires-Dist: torch
+Requires-Dist: transformers
+Requires-Dist: sentence-transformers
+Requires-Dist: chromadb
+Requires-Dist: Pillow
+Requires-Dist: tqdm
+Requires-Dist: python-multipart
+Requires-Dist: PyYAML
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# 🧠 Fund Factsheet RAG Chatbot  
+### _An Intelligent Multimodal RAG System for Fund Analysis using PDFs, Charts, and Tables_
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Docker](https://img.shields.io/badge/Docker-Supported-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+---
+
+## 📘 Overview
+
+The **Fund Factsheet RAG Chatbot** is a modular **Retrieval-Augmented Generation (RAG)** system that reads **fund factsheet PDFs** (text + tables + charts), extracts structured information, stores it as embeddings in **Chroma DB**, and lets you **ask questions conversationally** through a **Streamlit chat UI** backed by a **FastAPI** service.
+
+---
+
+
+## 🧩 Key Features
+
+✅ Extracts **text, tables, and charts (OCR)** from PDFs  
+✅ Uses **Hugging Face models** for embeddings and OCR  
+✅ Stores embeddings in **Chroma Vector Database**  
+✅ Provides a **FastAPI backend** for question answering  
+✅ Interactive **Streamlit frontend** for chatting  
+✅ Fully **Dockerized** for easy deployment  
+✅ Modular, extensible architecture  
+
+---
+
+## 🏗️ Architecture
+https://whimsical.com/JjEL3zCJVhZFhh274sVLND
+
+![HLD](hld_pdf.png)
+
+
+---
+## Project Structure
+
+```
+fund_factsheet_rag/
+├── .env                        # Environment variables (API keys, model names)
+├── configs/
+│   └── config.yaml             # Global configuration file
+├── requirements.txt            # Python dependencies
+├── docker-compose.yml          # Docker orchestration file
+├── Dockerfile                  # Docker image configuration
+├── setup.py                    # Python package setup
+│
+├── data/
+│   ├── raw_pdfs/               # Input fund factsheets
+│   ├── extracted_images/       # Extracted charts/images
+│   └── parsed_tables/          # Extracted tables
+│
+├── scripts/
+│   └── ingest_from_folder.py   # Extract + embed all PDFs
+│
+├── services/
+│   ├── fastapi_api/app.py      # FastAPI backend
+│   └── streamlit_ui/app.py     # Streamlit chatbot UI
+│
+└── src/fund_factsheet_rag/
+    ├── ingestion/              # PDF reading
+    ├── extraction/             # OCR and table extraction
+    ├── preprocessing/          # Caption generation / cleaning
+    ├── embeddings/             # Text embedding generation
+    ├── indexer/                # Chroma vector store
+    ├── retriever/              # Retrieval pipeline
+    ├── calculations/           # Finance metric functions
+    └── storage/
+
+```
+
+---
+
+⚙️ Installation (Manual Setup)
+
+1️⃣ Clone the Repository
+```
+
+git clone https://github.com/NeHa77A/Fund-Factsheet-RAG-Chatbot.git
+cd Fund-Factsheet-RAG-Chatbot
+```
+
+2️⃣ Create and Activate a Virtual Environment
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3️⃣ Install Dependencies
+```
+pip install -r requirements.txt
+```
+
+4️⃣ Set Environment Variables
+
+Create a .env file in your root directory:
+```
+HUGGINGFACE_API_KEY=your_huggingface_token
+TEXT_EMBED_MODEL=sentence-transformers/all-mpnet-base-v2
+OCR_MODEL=microsoft/trocr-base-printed
+```
+5️⃣ Add PDFs
+
+Place all your factsheet PDFs in:
+
+data/raw_pdfs/
+
+6️⃣ Run the Ingestion Pipeline
+```
+python scripts/ingest_from_folder.py
+```
+7️⃣ Start the FastAPI Backend
+```
+uvicorn services.fastapi_api.app:app --reload
+```
+
+Access: http://localhost:8000/docs
+
+8️⃣ Start the Streamlit Frontend
+streamlit run services/streamlit_ui/app.py
+
+
+Access: http://localhost:8501
+
+🐳 Run Everything Using Docker (Recommended)
+1️⃣ Build Docker Image
+```
+sudo docker compose build
+```
+2️⃣ Run All Services
+```
+sudo docker compose up
+```
+3️⃣ Access the Application
+Service	URL
+FastAPI Docs	http://localhost:8000/docs
+
+Streamlit Chatbot UI	http://localhost:8501
+4️⃣ Stop Containers
+```
+sudo docker compose down
+```
+
+Persistent data is automatically stored in:
+
+./data/        → PDFs & images  
+./.chromadb/   → Vector embeddings
+
+
+| Component                   | Model                                     | Description             |
+| --------------------------- | ----------------------------------------- | ----------------------- |
+| **Text Embeddings**         | `sentence-transformers/all-mpnet-base-v2` | For semantic search     |
+| **OCR (Charts)**            | `microsoft/trocr-base-printed`            | Extracts chart text     |
+| **LLM (Answer Generation)** | `HuggingFaceH4/zephyr-7b-beta`            | Generates final answers |
+| **Vector DB**               | `Chroma`                                  | Stores embeddings       |
+| **Frontend**                | `Streamlit`                               | Chat interface          |
+| **Backend**                 | `FastAPI`                                 | Retrieval + LLM logic   |
+
+
+---
+## Deployment
+
+Host a Docker application on Streamlit

@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: fund-factsheet-api
+    command: >
+      bash -c "
+      echo '🧠 Running ingestion...' &&
+      python scripts/ingest_from_folder.py &&
+      uvicorn services.fastapi_api.app:app --host 0.0.0.0 --port 8000
+      "
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.chromadb:/app/.chromadb
+    env_file:
+      - .env
+    restart: always
+
+  frontend:
+    build: .
+    container_name: fund-factsheet-ui
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://backend:8000/query   # ✅ internal network URL
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    command: >
+      bash -c "
+      echo '💬 Starting Streamlit UI...' &&
+      streamlit run services/streamlit_ui/app.py --server.port 8501 --server.address 0.0.0.0
+      "
