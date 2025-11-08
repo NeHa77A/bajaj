@@ -22,6 +22,17 @@ Built specifically for the Bajaj AMC Fund Factsheet challenge, supporting comple
 
 ---
 
+## 🎥 Demo Video
+
+Watch the application in action:
+
+<video width="800" controls>
+  <source src="video1.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+---
+
 ## 🧩 Key Features
 
 ✅ **Multimodal PDF Processing**: Extracts text, tables, and images from PDFs
