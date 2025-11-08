@@ -4,8 +4,29 @@
 ---
 
 ## Prerequisites
-✅ Python 3.10 or higher
+
+**For Local Development:**
+✅ Python 3.11 or higher
+✅ [uv](https://github.com/astral-sh/uv) - Ultrafast Python package installer
 ✅ Groq API Key (free at [console.groq.com](https://console.groq.com))
+✅ OpenAI API Key (for embeddings - get one at [platform.openai.com](https://platform.openai.com))
+
+**For Docker (Easier Setup):**
+✅ Docker and Docker Compose
+✅ Groq API Key
+✅ OpenAI API Key
+
+### Install uv (for local development)
+```bash
+# On Linux/macOS
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
 
 ---
 
@@ -13,18 +34,17 @@
 
 ### 1. Install Dependencies
 ```bash
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# Install packages
-pip install -r requirements.txt
+# uv automatically creates and manages the virtual environment
+uv pip install -e .
+# Or install from requirements.txt
+uv pip install -r requirements.txt
 ```
 
-### 2. Configure API Key
+### 2. Configure API Keys
 Create `.env` file in the project root:
 ```bash
 echo "GROQ_API_KEY=your_groq_api_key_here" > .env
+echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
 ```
 
 ### 3. Add Your PDFs
@@ -36,15 +56,43 @@ mkdir -p data/raw_pdfs
 
 ### 4. Index the Documents
 ```bash
-python scripts/ingest_from_folder.py
+uv run python scripts/ingest_from_folder.py
 ```
 
 Wait for completion (~1-2 minutes for a typical factsheet)
 
 ### 5. Launch the Chatbot
+
+**Option A: Run with uv**
 ```bash
-streamlit run services/streamlit_ui/app.py
+# Terminal 1: Backend
+uv run uvicorn services.fastapi_api.app:app --host 0.0.0.0 --port 8000 --reload
+
+# Terminal 2: Frontend
+uv run streamlit run services/streamlit_ui/app.py --server.port 8501 --server.address 0.0.0.0
 ```
+
+**Option B: Use Docker (Recommended)**
+
+```bash
+# Make sure you have a .env file with API keys
+# Then build and start all services
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+**Note:** Docker automatically runs PDF ingestion on startup. The backend will:
+1. Process all PDFs in `data/raw_pdfs/`
+2. Build the FAISS index
+3. Start the FastAPI server
 
 Open browser to: **http://localhost:8501**
 
@@ -81,8 +129,8 @@ The second question uses context from the first!
 - Re-run the ingestion script
 
 **Error: Module not found**
-- Activate virtual environment: `source .venv/bin/activate`
-- Reinstall: `pip install -r requirements.txt`
+- Reinstall dependencies: `uv pip install -r requirements.txt`
+- Or use: `uv run python <script>` to run with uv's managed environment
 
 **Streamlit won't start**
 - Check if port 8501 is available
@@ -108,8 +156,8 @@ The second question uses context from the first!
 └──────────────────┴──────────────────┘
        ↓                    ↓
 ┌──────────────────┬──────────────────┐
-│  HuggingFace     │  Groq LLM        │
-│  Embeddings      │  (Llama 3.1)     │
+│  OpenAI          │  Groq LLM        │
+│  Embeddings      │  (Llama 3.3)     │
 └──────────────────┴──────────────────┘
 ```
 

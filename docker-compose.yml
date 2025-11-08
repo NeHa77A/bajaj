@@ -14,7 +14,7 @@ services:
       - "8000:8000"
     volumes:
       - ./data:/app/data
-      - ./.chromadb:/app/.chromadb
+      - ./artifacts:/app/artifacts
     env_file:
       - .env
     restart: always
